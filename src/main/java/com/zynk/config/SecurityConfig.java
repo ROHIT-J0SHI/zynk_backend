@@ -47,7 +47,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/interns/onboard", "/api/health", "/api/hello", "/h2-console/**").permitAll()
                 .requestMatchers("/api/announcements/active").permitAll()
-                .requestMatchers("/api/ai/hr-summary", "/api/invoices/all", "/api/leaves/pending").hasRole("HR")
+                .requestMatchers("/api/ai/hr-summary", "/api/invoices/all", "/api/leaves/pending", "/api/interns/all").hasRole("HR")
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers

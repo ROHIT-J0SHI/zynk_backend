@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/interns")
 @RequiredArgsConstructor
@@ -54,6 +56,12 @@ public class InternController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<List<InternDetails>> getAllInterns() {
+        List<InternDetails> interns = internDetailsRepository.findAll();
+        return ResponseEntity.ok(interns);
     }
 }
 

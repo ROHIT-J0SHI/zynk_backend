@@ -4,6 +4,7 @@ import com.zynk.dto.LeaveBalanceResponse;
 import com.zynk.dto.LeaveRequest;
 import com.zynk.dto.LeaveResponse;
 import com.zynk.entity.Leave;
+import com.zynk.service.InternDetailsService;
 import com.zynk.service.LeaveService;
 import com.zynk.service.JwtService;
 import jakarta.validation.Valid;
@@ -20,13 +21,15 @@ public class LeaveController {
     
     private final LeaveService leaveService;
     private final JwtService jwtService;
+    private final InternDetailsService internDetailsService;
     
     @PostMapping("/request")
     public ResponseEntity<?> requestLeave(
             @RequestHeader("Authorization") String token,
             @Valid @RequestBody LeaveRequest request) {
         try {
-            Long internId = jwtService.extractUserId(token.replace("Bearer ", ""));
+            Long userId = jwtService.extractUserId(token.replace("Bearer ", ""));
+            Long internId = internDetailsService.getInternDetailsIdByUserId(userId);
             Leave leave = leaveService.createLeaveRequest(internId, request);
             return ResponseEntity.ok(leave);
         } catch (Exception e) {
@@ -37,14 +40,16 @@ public class LeaveController {
     @GetMapping("/my-leaves")
     public ResponseEntity<List<LeaveResponse>> getMyLeaves(
             @RequestHeader("Authorization") String token) {
-        Long internId = jwtService.extractUserId(token.replace("Bearer ", ""));
+        Long userId = jwtService.extractUserId(token.replace("Bearer ", ""));
+        Long internId = internDetailsService.getInternDetailsIdByUserId(userId);
         return ResponseEntity.ok(leaveService.getLeavesByIntern(internId));
     }
     
     @GetMapping("/balance")
     public ResponseEntity<LeaveBalanceResponse> getLeaveBalance(
             @RequestHeader("Authorization") String token) {
-        Long internId = jwtService.extractUserId(token.replace("Bearer ", ""));
+        Long userId = jwtService.extractUserId(token.replace("Bearer ", ""));
+        Long internId = internDetailsService.getInternDetailsIdByUserId(userId);
         return ResponseEntity.ok(leaveService.getLeaveBalance(internId));
     }
     

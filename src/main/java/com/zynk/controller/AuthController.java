@@ -1,7 +1,7 @@
 package com.zynk.controller;
 
-import com.zynk.dto.AuthResponse;
 import com.zynk.dto.LoginRequest;
+import com.zynk.entity.User;
 import com.zynk.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,18 @@ public class AuthController {
     
     private final UserService userService;
     
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        return userService.login(request)
+    @PostMapping("/login/hr")
+    public ResponseEntity<?> loginHR(@Valid @RequestBody LoginRequest request) {
+        return userService.login(request, User.UserRole.HR)
             .map(authResponse -> ResponseEntity.ok((Object) authResponse))
-            .orElse(ResponseEntity.status(401).body("Invalid credentials"));
+            .orElse(ResponseEntity.status(401).body("Invalid HR credentials"));
+    }
+    
+    @PostMapping("/login/intern")
+    public ResponseEntity<?> loginIntern(@Valid @RequestBody LoginRequest request) {
+        return userService.login(request, User.UserRole.INTERN)
+            .map(authResponse -> ResponseEntity.ok((Object) authResponse))
+            .orElse(ResponseEntity.status(401).body("Invalid intern credentials"));
     }
 }
 

@@ -9,15 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * Data Initializer - Creates default HR users on application startup
+ * Data Initializer - Creates default HR user on application startup
  * 
  * HR Credentials:
- * HR 1:
- *   Email: hr1@internflow.com
- *   Password: hr123456
- * 
- * HR 2:
- *   Email: hr2@internflow.com
+ *   Email: hr@internflow.com
  *   Password: hr123456
  */
 @Component
@@ -30,27 +25,20 @@ public class DataInitializer implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        initializeHRUsers();
+        initializeHRUser();
     }
     
-    private void initializeHRUsers() {
-        log.info("Initializing default HR users...");
+    private void initializeHRUser() {
+        log.info("Initializing default HR user...");
         
-        // HR User 1
+        // HR User
         createHRUserIfNotExists(
-            "hr1@internflow.com",
+            "hr@internflow.com",
             "hr123456",
-            "HR Manager 1"
+            "HR Manager"
         );
         
-        // HR User 2
-        createHRUserIfNotExists(
-            "hr2@internflow.com",
-            "hr123456",
-            "HR Manager 2"
-        );
-        
-        log.info("HR users initialization completed.");
+        log.info("HR user initialization completed.");
     }
     
     private void createHRUserIfNotExists(String email, String password, String name) {

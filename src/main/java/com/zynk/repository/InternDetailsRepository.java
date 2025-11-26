@@ -11,5 +11,8 @@ import java.util.Optional;
 public interface InternDetailsRepository extends JpaRepository<InternDetails, Long> {
     Optional<InternDetails> findByUser(User user);
     Optional<InternDetails> findByUserId(Long userId);
+    boolean existsByPanNumber(String panNumber);
+    boolean existsByAadhaarNumber(String aadhaarNumber);
+    boolean existsByBankAccountNumber(String bankAccountNumber);
 }
 

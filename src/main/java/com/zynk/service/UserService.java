@@ -18,19 +18,28 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     
-    public Optional<AuthResponse> login(LoginRequest request) {
+    public Optional<AuthResponse> login(LoginRequest request, User.UserRole expectedRole) {
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
         
-        if (userOpt.isPresent() && passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
+        if (userOpt.isPresent()) {
             User user = userOpt.get();
-            String token = jwtService.generateToken(user.getEmail(), user.getId(), user.getRole().name());
-            return Optional.of(new AuthResponse(
-                token,
-                user.getEmail(),
-                user.getName(),
-                user.getRole(),
-                user.getId()
-            ));
+            
+            // Check if user role matches expected role
+            if (user.getRole() != expectedRole) {
+                return Optional.empty();
+            }
+            
+            // Verify password
+            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                String token = jwtService.generateToken(user.getEmail(), user.getId(), user.getRole().name());
+                return Optional.of(new AuthResponse(
+                    token,
+                    user.getEmail(),
+                    user.getName(),
+                    user.getRole(),
+                    user.getId()
+                ));
+            }
         }
         
         return Optional.empty();

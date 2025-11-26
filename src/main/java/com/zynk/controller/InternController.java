@@ -4,6 +4,7 @@ import com.zynk.dto.InternOnboardingRequest;
 import com.zynk.entity.InternDetails;
 import com.zynk.entity.User;
 import com.zynk.repository.InternDetailsRepository;
+import com.zynk.service.JwtService;
 import com.zynk.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,35 @@ public class InternController {
     
     private final UserService userService;
     private final InternDetailsRepository internDetailsRepository;
+    private final JwtService jwtService;
     
     @PostMapping("/onboard")
-    public ResponseEntity<?> onboardIntern(@Valid @RequestBody InternOnboardingRequest request) {
+    public ResponseEntity<?> onboardIntern(
+            @RequestHeader("Authorization") String token,
+            @Valid @RequestBody InternOnboardingRequest request) {
         try {
+            // Verify HR role
+            String role = jwtService.extractRole(token.replace("Bearer ", ""));
+            
+            if (!"HR".equals(role)) {
+                return ResponseEntity.status(403).body("Only HR can onboard interns");
+            }
+            
+            // Check for unique constraints
+            if (internDetailsRepository.existsByPanNumber(request.getPanNumber())) {
+                return ResponseEntity.badRequest().body("PAN number already exists");
+            }
+            
+            if (internDetailsRepository.existsByAadhaarNumber(request.getAadhaarNumber())) {
+                return ResponseEntity.badRequest().body("Aadhaar number already exists");
+            }
+            
+            if (request.getBankAccountNumber() != null && 
+                !request.getBankAccountNumber().isEmpty() &&
+                internDetailsRepository.existsByBankAccountNumber(request.getBankAccountNumber())) {
+                return ResponseEntity.badRequest().body("Bank account number already exists");
+            }
+            
             // Create user
             User user = userService.createUser(
                 request.getEmail(),

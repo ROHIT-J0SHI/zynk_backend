@@ -37,12 +37,13 @@ public class InternDetails {
     private Double stipendAmount;
     
     // Personal Information
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String panNumber;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String aadhaarNumber;
     
+    @Column(unique = true)
     private String bankAccountNumber;
     private String bankIfscCode;
     private String bankName;

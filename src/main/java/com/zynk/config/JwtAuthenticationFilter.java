@@ -1,6 +1,5 @@
 package com.zynk.config;
 
-import com.zynk.entity.User;
 import com.zynk.repository.UserRepository;
 import com.zynk.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -45,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         UserDetails userDetails = org.springframework.security.core.userdetails.User
                             .withUsername(user.getEmail())
                             .password(user.getPassword())
-                            .authorities(user.getRole().name())
+                            .authorities("ROLE_" + user.getRole().name())
                             .build();
                         
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

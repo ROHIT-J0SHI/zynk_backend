@@ -16,10 +16,11 @@ public class TestController {
     @GetMapping("/hello")
     public ResponseEntity<Map<String, Object>> hello() {
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Hello from ZYNK HRMS API!");
+        response.put("message", "Hello from InternFlow HRMS API!");
         response.put("status", "success");
         response.put("timestamp", LocalDateTime.now());
-        response.put("application", "HRMS for interns");
+        response.put("application", "InternFlow - HRMS for interns");
+        response.put("version", "1.0.0");
         return ResponseEntity.ok(response);
     }
 
@@ -27,7 +28,8 @@ public class TestController {
     public ResponseEntity<Map<String, String>> health() {
         Map<String, String> response = new HashMap<>();
         response.put("status", "UP");
-        response.put("service", "ZYNK HRMS");
+        response.put("service", "InternFlow HRMS");
+        response.put("timestamp", LocalDateTime.now().toString());
         return ResponseEntity.ok(response);
     }
 }

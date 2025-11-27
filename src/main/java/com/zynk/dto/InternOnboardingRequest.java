@@ -34,10 +34,10 @@ public class InternOnboardingRequest {
     @Positive(message = "Stipend amount must be positive")
     private Double stipendAmount;
     
-    @NotBlank(message = "PAN number is required")
+    // PAN and Aadhaar are now optional at onboarding.
+    // HR can create an intern without KYC; the intern will later provide these
+    // details from their own portal, and HR can verify them.
     private String panNumber;
-    
-    @NotBlank(message = "Aadhaar number is required")
     private String aadhaarNumber;
     
     private String bankAccountNumber;

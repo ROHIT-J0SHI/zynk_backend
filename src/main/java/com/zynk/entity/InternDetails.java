@@ -58,6 +58,10 @@ public class InternDetails {
     
     // Signature file path (stored on server)
     private String signatureFilePath;
+
+    // Whether PAN/Aadhaar/bank KYC has been verified by HR
+    @Column(nullable = false)
+    private Boolean kycVerified = false;
     
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
